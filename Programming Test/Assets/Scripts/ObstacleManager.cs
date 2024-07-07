@@ -4,8 +4,8 @@ using UnityEngine;
 //Script for spawning obstacle in the grid
 public class ObstacleManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject obstaclePreFab; // sphere gameObject
+    [SerializeField]private GameObject obstaclePreFab; // sphere gameObject
+
     private ObstacleData obstacleData; // reference for obstacle data stored in a SO 
     private void Awake()
     {
