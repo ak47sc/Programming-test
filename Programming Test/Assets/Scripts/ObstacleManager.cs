@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,9 +8,10 @@ public class ObstacleManager : MonoBehaviour
     [SerializeField]private GameObject obstaclePreFab; // sphere gameObject
 
     private ObstacleData obstacleData; // reference for obstacle data stored in a SO 
+    private string[] scriptableObjectPath = new string[] { "Assets", "ScriptableObject", "ObstacleData.asset" };
     private void Awake()
     {
-        obstacleData = AssetDatabase.LoadAssetAtPath<ObstacleData>("Assets/ScriptableObject/ObstacleData.asset"); // loading SO
+        obstacleData = AssetDatabase.LoadAssetAtPath<ObstacleData>(Path.Combine(scriptableObjectPath)); // loading SO
     }
     private void Start()
     {

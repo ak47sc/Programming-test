@@ -11,10 +11,10 @@ public class EnemyAi : MonoBehaviour,IAi
     [SerializeField] private float movementSpeed;
 
     private Transform currentTile;
-    private bool HasDestination = false;
+    public bool HasDestination = false;
     private bool isMoving = false;
     private List<Transform> destinationList;
-    private int CurrentDestinationIndex = 0;
+    private int CurrentDestinationIndex = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -49,28 +49,35 @@ public class EnemyAi : MonoBehaviour,IAi
             HasDestination = true;
         }
         //if destination present moves to next destination point and starts coroutine for delay and repeats till destination arrives
-        if (HasDestination && !isMoving)
+        if (HasDestination)
         {
-            transform.position = destinationList[CurrentDestinationIndex].position + (Vector3.up * 1.5f);
-            destinationList[CurrentDestinationIndex++].GetComponent<Renderer>().material.SetColor("_Color", new Color32(250, 160, 5, 255));
-            isMoving = true;
-            StartCoroutine(nameof(Delay));
-
             if (CurrentDestinationIndex >= destinationList.Count-1)
             {
-                destinationList[CurrentDestinationIndex++].GetComponent<Renderer>().material.SetColor("_Color", new Color32(250, 160, 5, 255));
                 HasDestination = false;
                 isMoving = false;
-                currentTile = destinationList[CurrentDestinationIndex - 2];
+                currentTile = destinationList[CurrentDestinationIndex - 1];
                 currentTile.GetComponent<TileInfo>().SetWalkable();
-                CurrentDestinationIndex = 0;
+                destinationList[CurrentDestinationIndex].GetComponent<Renderer>().material.SetColor("_Color", new Color32(250, 160, 5, 255));
+                CurrentDestinationIndex = -1;
                 GameManager.Instance.SetState(GameManager.GameState.PLAYER_TURN);
+                return;
+            }
+            if (isMoving)
+            {
+                destinationList[CurrentDestinationIndex].GetComponent<Renderer>().material.SetColor("_Color", new Color32(250, 160, 5, 255));
+                transform.position = Vector3.Lerp(transform.position, destinationList[CurrentDestinationIndex].position + (Vector3.up * 1.5f), 0.1f);
+            }
+            else
+            {
+                StartCoroutine(nameof(Delay));
+                isMoving = true;
             }
         }
     }
     //coroutine for delay
     IEnumerator Delay()
     {
+        CurrentDestinationIndex++;
         yield return new WaitForSeconds(movementSpeed);
         isMoving = false;
     }

@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 //Custom Editor tool for creating obstacles
 public class CreateObstacle : EditorWindow 
 {
-    bool[][] obstacles = new bool[10][];
-    Vector2 scrollPos;
+    private bool[][] obstacles = new bool[10][];
+    private Vector2 scrollPos;
+
+    private string[] scriptableObjectPath = new string[] { "Assets", "ScriptableObject", "ObstacleData.asset" };
     
     [MenuItem("Tools/Obstacle spawner")]
     public static void ShowWindow()
@@ -24,7 +27,7 @@ public class CreateObstacle : EditorWindow
                 obstacles[i][j] = false;
             }
         }
-        ObstacleData obstacleData = AssetDatabase.LoadAssetAtPath<ObstacleData>("Assets/ScriptableObject/ObstacleData.asset");
+        ObstacleData obstacleData = AssetDatabase.LoadAssetAtPath<ObstacleData>(Path.Combine(scriptableObjectPath));
         if(obstacleData != null )
         {
             int idx = 0;
@@ -67,7 +70,7 @@ public class CreateObstacle : EditorWindow
     private void SaveObstacleData(bool[][] obstacles)
     {
         ObstacleData saveObj = CreateInstance<ObstacleData>();
-        AssetDatabase.CreateAsset(saveObj, "Assets/ScriptableObject/ObstacleData.asset");
+        AssetDatabase.CreateAsset(saveObj, Path.Combine(scriptableObjectPath));
         saveObj.Configure(obstacles);
         EditorUtility.SetDirty(saveObj);
         AssetDatabase.SaveAssets();
