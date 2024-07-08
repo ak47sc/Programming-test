@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class TileSelectManager : MonoBehaviour
     [SerializeField] private GameObject tileSelectionUIHolder;
     [SerializeField] private GameObject playerMovingTextUI;
     [SerializeField] private Transform player;
+    [SerializeField] private TextMeshProUGUI playerStateTextUI;
 
     private Transform tileOnMouseCursor;
 
@@ -58,6 +60,12 @@ public class TileSelectManager : MonoBehaviour
                 PathFinding finder = new PathFinding();
                 List<Transform> paths = finder.FindShortestPath(player.GetComponent<PlayerController>().GetCurrentTile(), tileOnMouseCursor);
 
+                if(paths == null)
+                {
+                    Debug.Log("NO PATH");
+                    playerStateTextUI.text = "No Path";
+                    return;
+                }
                 // Colour the node red.
                 foreach (Transform path in paths)
                 {

@@ -24,6 +24,10 @@ public class PathFinding
 
         // Reverse the list so that it will be from start to end.
         result.Reverse();
+        if (result[0] == end)
+        {
+            return null;
+        }
         return result;
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 //Enemy script implements AI interface
@@ -32,7 +33,12 @@ public class EnemyAi : MonoBehaviour,IAi
             PathFinding finder = new PathFinding();
             currentTile.GetComponent<TileInfo>().SetWalkable();
             destinationList = finder.FindShortestPath(currentTile, Player.GetComponent<PlayerController>().GetCurrentTile());
-
+            if(destinationList == null)
+            {
+                Debug.Log("NO PATH");
+                GameManager.Instance.SetState(GameManager.GameState.PLAYER_TURN);
+                return;
+            }
             // Colour the node red.
             foreach (Transform path in destinationList)
             {
